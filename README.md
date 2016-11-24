@@ -1,3 +1,5 @@
+# install, config, run
+
 - `npm install`
 - 複製 __values.js.template__，並改名為 __values.js__
 - edit __values.js__
