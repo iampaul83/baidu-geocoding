@@ -7,7 +7,7 @@
 
 # CSV_IN
 
-需要有header, 並在 values.js 的 CSV_ADDR 指定地址的欄位名稱
+CSV_IN需要有header, 並在 values.js 的 CSV_ADDR 指定地址的欄位名稱
 
 ---
 
