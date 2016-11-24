@@ -1,0 +1,16 @@
+module.exports = {
+
+  CSV_IN: 'addr.csv',
+
+  // CSV_IN的地址欄位名稱
+  CSV_ADDR: 'addr'
+
+  CSV_OUT: 'output.csv',
+
+  // 百度LBS開放平台申請：http://lbsyun.baidu.com/apiconsole/key
+  BAIDU_APP_KEY: '',
+
+  // 同時最多10個request
+  REQUEST_CONCURRENCY: 10
+
+}

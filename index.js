@@ -6,11 +6,10 @@ var bar;
 
 var Q = require('q');
 var async = require('async');
-// async.queue(worker, concurrency)
+
+var v = require('./values.js');
 
 var errors = [];
-
-
 
 readCsv()
   // FOR TEST
@@ -29,7 +28,7 @@ readCsv()
 
 
 function addProgressBar(data) {
-  bar = new ProgressBar('  downloading [:bar] :percent :etas', {
+  bar = new ProgressBar('downloading [:bar] :percent :etas', {
     complete: '=',
     incomplete: ' ',
     width: 30,
@@ -43,7 +42,7 @@ function readCsv() {
 
   var csvParser = csv.parse({delimiter: ',', columns:true});
   var data = [];
-  fs.createReadStream('addr.csv')
+  fs.createReadStream(v.CSV_IN)
     .pipe(csvParser)
     .on('data', function(csvrow) {
         data.push(csvrow)
@@ -57,17 +56,16 @@ function readCsv() {
 
 function saveCsv(data) {
   csv.stringify(data, {delimiter: ','}, function(err, output){
-    fs.writeFileSync('output.csv', output, 'utf8');
+    fs.writeFileSync(v.CSV_OUT, output, 'utf8');
   });
 }
 
 function startBaiduRequests(data) {
   var deferred = Q.defer();
 
-  var baiduQueue = async.queue(baiduRequestWorker, 10);
+  var baiduQueue = async.queue(baiduRequestWorker, v.REQUEST_CONCURRENCY);
 
   baiduQueue.drain = function() {
-    console.log('all items have been processed');
     deferred.resolve(data);
   };
 
@@ -79,8 +77,8 @@ function startBaiduRequests(data) {
 }
 
 function baiduRequestWorker(data, callback) {
-  // http://api.map.baidu.com/geocoder/v2/?output=json&ak=sWvpNiLBk4NsBBgCjHrc6TAo&address=
-  var url = 'http://api.map.baidu.com/geocoder/v2/?output=json&ak=sWvpNiLBk4NsBBgCjHrc6TAo&address=' + encodeURI(data.addr);
+  var address = data[v.CSV_ADDR];
+  var url = `http://api.map.baidu.com/geocoder/v2/?output=json&ak=${v.BAIDU_APP_KEY}&address=${encodeURI(address)}`;
 
   request(url, function (error, response, body) {
     bar.tick();
@@ -103,7 +101,6 @@ function baiduRequestWorker(data, callback) {
 
 function baiduRequestErrorHandle(error) {
   if (error) {
-    // console.log(error);
     errors.push(error);
   }
 }
