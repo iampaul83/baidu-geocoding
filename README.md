@@ -1,4 +1,4 @@
-[Imgur](http://i.imgur.com/udCH9uT.png)
+![Imgur](http://i.imgur.com/udCH9uT.png)
 
 # install, config, run
 
